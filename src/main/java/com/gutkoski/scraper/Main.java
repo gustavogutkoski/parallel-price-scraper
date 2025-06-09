@@ -1,5 +1,8 @@
 package com.gutkoski.scraper;
 
+import com.gutkoski.scraper.application.ScrapingService;
+import com.gutkoski.scraper.infrastructure.http.BlockingScraper;
+
 import java.net.http.HttpClient;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -18,9 +21,10 @@ public class Main {
 
         try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
             HttpClient client = HttpClient.newHttpClient();
+            BlockingScraper scraper = new BlockingScraper(client);
+            ScrapingService service = new ScrapingService(scraper);
 
-            var results = submitScrapingTasks(urls, client, executor);
-
+            var results = submitBlockingScrapingTasks(urls, service, executor);
             printResults(results);
 
             executor.shutdown();
@@ -29,12 +33,9 @@ public class Main {
         }
     }
 
-    private static List<Future<String>> submitScrapingTasks(List<String> urls, HttpClient client, ExecutorService executor) {
+    private static List<Future<String>> submitBlockingScrapingTasks(List<String> urls, ScrapingService scrapingService, ExecutorService executor) {
         return urls.stream()
-                .map(url -> executor.submit(() -> {
-                    PriceScraper scraper = new PriceScraper(client, url);
-                    return scraper.fetchPrice();
-                }))
+                .map(url -> executor.submit(() -> scrapingService.fetchPrice(url)))
                 .toList();
     }
 
