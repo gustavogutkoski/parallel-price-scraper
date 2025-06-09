@@ -59,7 +59,7 @@ src/
 1. Clone the repository.
 2. Compile the project using Maven:
 ```bash
-  mvn clean compile exec:java -Dexec.mainClass=com.gutkoski.scraper.Main
+  mvn clean compile exec:java -Dexec.mainClass=com.gutkoski.scraper.ScraperApplication
 ```
 
 ---

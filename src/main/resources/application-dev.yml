@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: parallel-price-scraper
+  web:
+    resources:
+      add-mappings: true
+  main:
+    web-application-type: reactive
+
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    com.gutkoski: DEBUG
+
+spring.webclient:
+  connect-timeout: 5000
+  read-timeout: 10000
+
+
